@@ -1,0 +1,19 @@
+# Node modules (ALLT som installeras via npm)
+node_modules/
+
+# Miljövariabler (t.ex. databaslänkar och hemliga nycklar)
+.env
+
+# Loggfiler
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Mac-systemfiler (ibland oavsiktligt med)
+.DS_Store
+
+# OS genererade filer
+Thumbs.db
+
+# Swagger-UI temporära filer (om du använder den lokalt)
+swagger-output.json

@@ -48,6 +48,10 @@ router.get('/', getNotes);
  *     responses:
  *       201:
  *         description: Anteckning skapad
+ *       400:
+ *         description: Titel och text måste anges
+ *       500:
+ *         description: Internt serverfel vid skapande
  */
 // POST skapa ny anteckning
 router.post('/', createNote);
@@ -84,31 +88,64 @@ router.post('/', createNote);
  *                 description: Nytt textinnehåll för anteckningen
  *     responses:
  *       200:
- *         description: Anteckningen uppdaterad
+ *         description: Anteckningen har uppdaterats
+ *       400:
+ *         description: Titel och/eller text måste anges för att uppdatera
+ *       404:
+ *         description: Anteckning hittades inte
+ *       500:
+ *         description: Internt serverfel vid uppdatering
  */
 // Put ändra en anteckning
 router.put ('/:id', updateNote);
 /**
  * @swagger
  * /api/notes/{id}:
- *  delete:
- *      summary: Tar bort befintlig anteckning för den inloggade användaren
- *      tags: [Notes]
- *      security:
- *          - bearerAuth: []
- *      parameters:
+ *   delete:
+ *     summary: Tar bort en befintlig anteckning för den inloggade användaren
+ *     tags: [Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *      responses:
- *          200:
- *              description: Anteckning borttagen
+ *         description: ID för anteckningen som ska tas bort
+ *     responses:
+ *       200:
+ *         description: Anteckning borttagen
+ *       404:
+ *         description: Anteckning hittades inte
+ *       500:
+ *         description: Internt serverfel vid borttagning
  */
 // DELETE för att ta bort en anteckning
 router.delete ('/:id', deleteNote);
-
+/**
+ * @swagger
+ * /api/notes/search:
+ *   get:
+ *     summary: Sök anteckningar efter titel för den inloggade användaren
+ *     tags: [Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Titeln eller delar av titeln att söka efter
+ *     responses:
+ *       200:
+ *         description: Lyckad sökning efter anteckningar
+ *       400:
+ *         description: Ingen sökterm angiven
+ *       500:
+ *         description: Internt serverfel vid sökning
+ */
 router.get ('/search', searchNotes);
 
 module.exports = router;

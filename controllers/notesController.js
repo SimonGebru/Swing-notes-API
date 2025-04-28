@@ -2,22 +2,26 @@ const Note = require('../models/noteModel');
 
 // POST Skapa anteckning
 exports.createNote = async (req, res) => {
-  const { title, text } = req.body;
-
-  try {
-    const newNote = new Note({
-      title,
-      text,
-      userId: req.user.userId, 
-    });
-
-    await newNote.save();
-
-    res.status(201).json({ message: 'Anteckning skapad!', note: newNote });
-  } catch (error) {
-    res.status(500).json({ message: 'Kunde inte skapa anteckning', error: error.message });
-  }
-};
+    const { title, text } = req.body;
+  
+    if (!title || !text) {
+      return res.status(400).json({ message: 'Titel och text måste anges' });
+    }
+  
+    try {
+      const newNote = new Note({
+        title,
+        text,
+        userId: req.user.userId, 
+      });
+  
+      await newNote.save();
+  
+      res.status(201).json({ message: 'Anteckning skapad!', note: newNote });
+    } catch (error) {
+      res.status(500).json({ message: 'Kunde inte skapa anteckning', error: error.message });
+    }
+  };
 
 // GET Hämta alla anteckningar för användaren
 exports.getNotes = async (req, res) => {
@@ -33,6 +37,10 @@ exports.getNotes = async (req, res) => {
 exports.updateNote = async (req, res) => {
     const { id } = req.params;
     const { title, text } = req.body;
+  
+    if (!title && !text) {
+      return res.status(400).json({ message: 'Du måste skicka in titel och/eller text för att uppdatera' });
+    }
   
     try {
       const note = await Note.findOne({ _id: id, userId: req.user.userId });
@@ -81,8 +89,8 @@ exports.searchNotes = async (req, res) => {
   
     try {
       const notes = await Note.find({
-        userId: req.user.userId, // Endast användarens egna anteckningar
-        title: { $regex: title, $options: 'i' } // Regex för delvis match, 'i' = case-insensitive
+        userId: req.user.userId, 
+        title: { $regex: title, $options: 'i' } // 
       });
   
       res.status(200).json(notes);

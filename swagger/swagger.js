@@ -1,21 +1,35 @@
 const swaggerJSDoc = require('swagger-jsdoc');
 
 const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Swing Notes API',
-      version: '1.0.0',
-      description: 'Ett API för att hantera anteckningar',
-    },
-    servers: [
-      {
-        url: 'http://localhost:5050', 
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'Swing Notes API',
+        version: '1.0.0',
+        description: 'Ett API för att hantera anteckningar',
       },
-    ],
-  },
-  apis: ['./routes/*.js'], 
-};
+      servers: [
+        {
+          url: 'http://localhost:5050',
+        },
+      ],
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+    },
+    apis: ['./routes/*.js'],
+  };
 
 const swaggerSpec = swaggerJSDoc(options);
 

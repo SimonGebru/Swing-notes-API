@@ -70,3 +70,23 @@ exports.updateNote = async (req, res) => {
       res.status(500).json({ message: 'Kunde inte ta bort anteckning', error: error.message });
     }
   };
+  
+  // GET /api/notes/search – Sök bland anteckningar på titel
+exports.searchNotes = async (req, res) => {
+    const { title } = req.query;
+  
+    if (!title) {
+      return res.status(400).json({ message: 'Ingen sökterm angiven' });
+    }
+  
+    try {
+      const notes = await Note.find({
+        userId: req.user.userId, // Endast användarens egna anteckningar
+        title: { $regex: title, $options: 'i' } // Regex för delvis match, 'i' = case-insensitive
+      });
+  
+      res.status(200).json(notes);
+    } catch (error) {
+      res.status(500).json({ message: 'Kunde inte söka anteckningar', error: error.message });
+    }
+  };

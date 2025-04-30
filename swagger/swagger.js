@@ -1,36 +1,6 @@
-const swaggerJSDoc = require('swagger-jsdoc');
+const fs = require('fs');
+const yaml = require('js-yaml');
 
-const options = {
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Swing Notes API',
-        version: '1.0.0',
-        description: 'Ett API för att hantera anteckningar',
-      },
-      servers: [
-        {
-          url: 'http://localhost:5050',
-        },
-      ],
-      components: {
-        securitySchemes: {
-          bearerAuth: {
-            type: 'http',
-            scheme: 'bearer',
-            bearerFormat: 'JWT',
-          },
-        },
-      },
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
-    },
-    apis: ['./routes/*.js'],
-  };
+const swaggerDocument = yaml.load(fs.readFileSync('./swagger/swagger.yaml', 'utf8'));
 
-const swaggerSpec = swaggerJSDoc(options);
-
-module.exports = swaggerSpec;
+module.exports = swaggerDocument;
